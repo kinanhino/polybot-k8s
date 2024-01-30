@@ -7,7 +7,12 @@ from botocore.exceptions import ClientError
 from loguru import logger
 import json
 
+url = "https://i.gifer.com/g0R5.gif"
+response = requests.get(url)
 
+if response.status_code == 200:
+    with open("loading.gif", "wb") as file:
+        file.write(response.content)
 def get_secret():
 
     secret_name = "kinan-aws-key"
