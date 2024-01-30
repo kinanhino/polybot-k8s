@@ -129,6 +129,7 @@ class ObjectDetectionBot(Bot):
             return False
         return True
 
+
     def handle_message(self, msg):
         logger.info(f'Incoming message: {msg}')
 
