@@ -73,6 +73,8 @@ def results():
     logger.info(f'prediction_summary in results: {prediction_summary}')
     logger.info(f'type: {type(prediction_summary)}')
     chat_id = prediction_summary['chat_id']
+    gif_message_id = prediction_summary['gif_message_id']
+    bot.delete_message(chat_id, gif_message_id)
     logger.info(f'chat id: {chat_id}')
     text_results = bot.handle_dynamo_message(prediction_summary)
     bot.send_text(chat_id, text_results)

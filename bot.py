@@ -8,7 +8,6 @@ from botocore.exceptions import ClientError
 from collections import Counter
 import json
 
-
 class Bot:
 
     def __init__(self, token, telegram_chat_url):
@@ -129,19 +128,20 @@ class ObjectDetectionBot(Bot):
             return False
         return True
 
-
     def handle_message(self, msg):
-        logger.info(f'Incoming message: {msg}')
 
+        logger.info(f'Incoming message: {msg}')
         if self.is_current_msg_photo(msg):
+            with open('loading.gif', 'rb') as gif:
+                # send message to the Telegram end-user
+                loading_msg = self.send_animation(chat_id=msg['chat']['id'], gif=gif)
             photo_path = self.download_user_photo(msg)
             bucket_name = os.environ['BUCKET_NAME']
             # upload the photo to S3
             self.upload_to_s3(photo_path, bucket_name, photo_path)
             # send a job to the SQS queue
-            self.send_message_to_sqs(f"{photo_path},{msg['chat']['id']}")
-            # send message to the Telegram end-user
-            self.send_text(msg['chat']['id'], f'Your image is being processed. Please wait...')
+            self.send_message_to_sqs(f"{photo_path},{msg['chat']['id']},{loading_msg.message_id}")
+
         elif "text" in msg:
             self.send_text(msg['chat']['id'], 'Hint: Send Photos to detect objects')
         else:
