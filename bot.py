@@ -141,3 +141,7 @@ class ObjectDetectionBot(Bot):
             self.send_message_to_sqs(f"{photo_path},{msg['chat']['id']}")
             # send message to the Telegram end-user
             self.send_text(msg['chat']['id'], f'Your image is being processed. Please wait...')
+        elif "text" in msg:
+            self.send_text(msg['chat']['id'], 'Hint: Send Photos to detect objects')
+        else:
+            self.send_text(msg['chat']['id'], 'Unsupported message type.')
