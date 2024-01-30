@@ -33,6 +33,9 @@ class Bot:
     def send_animation(self, chat_id, gif):
         return self.telegram_bot_client.send_animation(chat_id=chat_id, animation=gif)
 
+    def delete_message(self, chat_id, msg_id):
+        self.telegram_bot_client.delete_message(chat_id=chat_id, message_id=msg_id)
+
     def send_text_with_quote(self, chat_id, text, quoted_msg_id):
         self.telegram_bot_client.send_message(chat_id, text, reply_to_message_id=quoted_msg_id)
 
