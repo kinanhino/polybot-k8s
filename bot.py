@@ -134,6 +134,25 @@ class ObjectDetectionBot(Bot):
             return False
         return True
 
+    def download_from_s3(self, bucket_name, object_name, local_path):
+
+        s3_client = self.session.client('s3')
+        try:
+            s3_client.download_file(bucket_name, object_name, local_path)
+        except ClientError as e:
+            logger.error(e)
+            return False
+        return True
+
+    def send_photo(self, chat_id, img_path):
+        if not os.path.exists(img_path):
+            raise RuntimeError("Image path doesn't exist")
+
+        self.telegram_bot_client.send_photo(
+            chat_id,
+            InputFile(img_path)
+        )
+
     def handle_message(self, msg):
 
         logger.info(f'Incoming message: {msg}')

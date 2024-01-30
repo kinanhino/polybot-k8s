@@ -47,7 +47,7 @@ TELEGRAM_TOKEN = get_secret()
 
 TELEGRAM_APP_URL = os.environ['TELEGRAM_APP_URL']
 
-
+s3_bucket = os.environ['BUCKET_NAME']
 @app.route('/', methods=['GET'])
 def index():
     return 'Ok'
@@ -72,10 +72,14 @@ def results():
     logger.info(f'prediction_summary in results: {prediction_summary}')
     logger.info(f'type: {type(prediction_summary)}')
     chat_id = prediction_summary['chat_id']
+    photo_path = prediction_summary['original_img_path']
     gif_message_id = prediction_summary['gif_message_id']
     bot.delete_message(chat_id, gif_message_id)
     logger.info(f'chat id: {chat_id}')
     text_results = bot.handle_dynamo_message(prediction_summary)
+    s3_path = "predicted/" + os.path.basename(photo_path)
+    bot.download_from_s3(s3_bucket, s3_path, photo_path)
+    bot.send_photo(chat_id, photo_path)
     bot.send_text(chat_id, text_results)
     return 'Ok'
 
