@@ -35,9 +35,8 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'GIT_CREDENTIALS_ID', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         def repoDir = 'polybot-k8s'
-                        def repoUrl = 'github.com/kinanhino/polybot-k8s.git'
                         if (!fileExists("${repoDir}/.git")) {
-                            sh "git clone https://${repoUrl}github.com/kinanhino/polybot-k8s.git ${repoDir}"
+                            sh "git clone https://github.com/kinanhino/polybot-k8s.git ${repoDir}"
                         }
 
                         dir(repoDir) {
@@ -57,7 +56,7 @@ pipeline {
                             
                             sh 'git add polybot-deployment.yaml'
                             sh 'git commit -m "Update image tag to ${IMAGE_TAG}"'
-                            sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@${repoUrl} argo-releases'
+                            sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/kinanhino/polybot-k8s.git argo-releases'
                         }
                     }
                 }
