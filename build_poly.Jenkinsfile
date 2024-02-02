@@ -37,16 +37,20 @@ pipeline {
                         def repoDir = 'polybot-k8s'
 
                         if (!fileExists('${repoDir}/.git')) {
-                            sh 'git clone --branch argo-releases https://github.com/kinanhino/polybot-k8s.git .'
-                        } else {
-                            dir(repoDir) {
-                                sh 'git reset --hard'
-                                sh 'git checkout argo-releases'
-                                sh 'git pull'
-                            }
-                        }
+                            sh 'git clone https://github.com/kinanhino/polybot-k8s.git .'
+                        } 
                         dir(repoDir) {
-                            
+                            sh 'git checkout argo-releases'
+                            sh 'git fetch --all'
+                            sh 'git reset --hard origin/argo-releases'
+                            try {
+                                sh 'git merge origin/main'
+                            } catch (Exception e) {
+                                echo "Merge encountered issues: ${e.getMessage()}"
+                                sh 'git merge --abort'
+                                error "Merging from main to argo-releases failed. Please resolve conflicts manually."
+                            }
+
                             sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}|' polybot-deployment.yaml"
                             sh 'git config user.email "kinanhino24@gmail.com"'
                             sh 'git config user.name "kinanhino"'
