@@ -31,38 +31,43 @@ pipeline {
             }
         }
         stage('Update Deployment and Push to GitHub') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'GIT_CREDENTIALS_ID', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        def repoDir = 'polybot-k8s'
-
-                        if (!fileExists('${repoDir}/.git')) {
-                            sh 'git clone https://github.com/kinanhino/polybot-k8s.git .'
-                        } 
-                        dir(repoDir) {
-                            sh 'git checkout argo-releases'
-                            sh 'git fetch --all'
-                            sh 'git reset --hard origin/argo-releases'
-                            try {
-                                sh 'git merge origin/main'
-                            } catch (Exception e) {
-                                echo "Merge encountered issues: ${e.getMessage()}"
-                                sh 'git merge --abort'
-                                error "Merging from main to argo-releases failed. Please resolve conflicts manually."
-                            }
-
-                            sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}|' polybot-deployment.yaml"
-                            sh 'git config user.email "kinanhino24@gmail.com"'
-                            sh 'git config user.name "kinanhino"'
-                            
-                            sh 'git add polybot-deployment.yaml'
-                            sh 'git commit -m "Update image tag to ${IMAGE_TAG}"'
-                            sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/kinanhino/polybot-k8s.git argo-releases'
-                        }
+    steps {
+        script {
+            withCredentials([usernamePassword(credentialsId: 'GIT_CREDENTIALS_ID', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                def repoDir = 'polybot-k8s'
+                
+                // Correctly check if the .git directory exists within repoDir
+                if (!fileExists("${repoDir}/.git")) {
+                    // Clone directly into repoDir if it does not exist
+                    sh "git clone https://github.com/kinanhino/polybot-k8s.git ${repoDir}"
+                }
+                
+                // Now, operate within repoDir regardless of cloning or not
+                dir(repoDir) {
+                    sh 'git checkout argo-releases'
+                    sh 'git fetch --all'
+                    sh 'git reset --hard origin/argo-releases'
+                    try {
+                        sh 'git merge origin/main'
+                    } catch (Exception e) {
+                        echo "Merge encountered issues: ${e.getMessage()}"
+                        sh 'git merge --abort'
+                        error "Merging from main to argo-releases failed. Please resolve conflicts manually."
                     }
+
+                    sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}|' polybot-deployment.yaml"
+                    sh 'git config user.email "kinanhino24@gmail.com"'
+                    sh 'git config user.name "kinanhino"'
+                    
+                    sh 'git add polybot-deployment.yaml'
+                    sh 'git commit -m "Update image tag to ${IMAGE_TAG}"'
+                    sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/kinanhino/polybot-k8s.git argo-releases'
                 }
             }
         }
+    }
+}
+
 
 
     }
