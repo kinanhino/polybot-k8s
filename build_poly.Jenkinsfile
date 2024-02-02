@@ -24,12 +24,55 @@ pipeline {
             steps {
                 script {
                     echo "IMAGE_TAG: ${IMAGE_TAG}"
-                    dockerImage = docker.build("${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}") // , "--no-cache .")
+                    dockerImage = docker.build("${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}")
                     dockerImage.push()
                 }
             }
         }
-        
+        stage('Deploy') {
+            steps {
+                script {
+                    withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
+                        withCredentials([file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')]) {
+                            sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}|' polybot-deployment.yaml"
+                            sh 'kubectl apply -f polybot-deployment.yaml' 
+                        }
+                    }
+                }
+            }
+        }
+        stage('Update Deployment and Push to GitHub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'GIT_CREDENTIALS_ID', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        def repoDir = 'polybot-k8s'
+
+                        if (!fileExists('${repoDir}/.git')) {
+                            sh 'git clone --branch argo-releases https://github.com/kinanhino/polybot-k8s.git .'
+                        } else {
+                            dir(repoDir) {
+                                sh 'git reset --hard'
+                                sh 'git checkout argo-releases'
+                                sh 'git pull'
+                            }
+                        }
+                        dir(repoDir) {
+                            
+                            sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}|' polybot-deployment.yaml"
+                            sh 'git config user.email "kinanhino24@gmail.com"'
+                            sh 'git config user.name "kinanhino"'
+                            
+                            sh 'git add polybot-deployment.yaml'
+                            sh 'git commit -m "Update image tag to ${IMAGE_TAG}"'
+                            sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/kinanhino/polybot-k8s.git argo-releases'
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
     post {
         always {
