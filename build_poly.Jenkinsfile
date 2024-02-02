@@ -9,6 +9,7 @@ pipeline {
         KUBE_CONFIG_CRED = 'KUBE_CONFIG_CRED'
         CLUSTER_NAME = "k8s-main"
         CLUSTER_REGION = "us-east-1"
+        GIT_CREDENTIALS_ID = "GIT_CREDENTIALS_ID"
     }
     stages {
         stage('Login to AWS ECR') {
