@@ -61,7 +61,7 @@ pipeline {
                     
                     sh 'git add polybot-deployment.yaml'
                     sh 'git commit -m "Update image tag to ${IMAGE_TAG}"'
-                    sh 'git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/kinanhino/polybot-k8s.git argo-releases'
+                    sh 'git push https://${GIT_USERNAME.replaceAll("@", "%40")}:$GIT_PASSWORD@github.com/kinanhino/polybot-k8s.git argo-releases'
                 }
             }
         }
