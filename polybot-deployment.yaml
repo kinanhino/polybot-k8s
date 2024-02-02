@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: team3polybot
-          image: kinanhino/polybot:1.0.2-amd64
+          image: 933060838752.dkr.ecr.eu-central-1.amazonaws.com/team3-polybot-ecr:12_20240130_223333
           ports:
             - containerPort: 8443
           resources:

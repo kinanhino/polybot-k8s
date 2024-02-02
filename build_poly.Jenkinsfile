@@ -29,25 +29,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
-            steps {
-                script {
-                    withCredentials([aws(credentialsId: AWS_CREDENTIALS_ID, accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        sh 'aws eks update-kubeconfig --region ${CLUSTER_REGION} --name ${CLUSTER_NAME}'
-                        withCredentials([file(credentialsId: 'KUBE_CONFIG_CRED', variable: 'KUBECONFIG')]) {
-                            // sh 'aws eks --region us-east-1 update-kubeconfig --name k8s-main'
-                            // sh 'kubectl config set-context --current --namespace=lanabot-dev-ns'
-                            sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}|' polybot-deployment.yaml"
-                            // sh "cat lana-bot-deployment.yaml"
-                            sh 'kubectl apply -f polybot-deployment.yaml' //--validate=false'
-                        }
-                    }
-                    // withCredentials([file(credentialsId: 'kubeconfig-credentials', variable: 'KUBECONFIG_FILE')]) {
-                    //    sh "aws eks update-kubeconfig --region us-east-1 --name k8s-main --kubeconfig \$KUBECONFIG_FILE"
-                    // }
-                }
-            }
-        }
+        
     }
     post {
         always {
