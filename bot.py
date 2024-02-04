@@ -82,6 +82,7 @@ class Bot:
 class ObjectDetectionBot(Bot):
 
     def handle_dynamo_message(self, dynamo_message):
+        logger.info("handling dynamo..")
         class_names = [label['M']['class']['S'] for label in dynamo_message['labels']]
         class_counts = Counter(class_names)
         json_string = json.dumps(class_counts)
@@ -115,6 +116,7 @@ class ObjectDetectionBot(Bot):
             return None
 
     def send_message_to_sqs(self, msg_body):
+        logger.info("send to sqs..")
         sqs_client = self.session.client('sqs')
         queue_url = os.getenv('QUEUE_URL')
         try:
@@ -129,6 +131,7 @@ class ObjectDetectionBot(Bot):
             print(f"An unexpected error occurred: {e}")
 
     def upload_to_s3(self, file_path, bucket_name, object_name=None):
+        logger.info("upload to s3...")
         if object_name is None:
             object_name = os.path.basename(file_path)
 
@@ -141,7 +144,7 @@ class ObjectDetectionBot(Bot):
         return True
 
     def download_from_s3(self, bucket_name, object_name, local_path):
-
+        logger.info("download from s3..")
         s3_client = self.session.client('s3')
         try:
             s3_client.download_file(bucket_name, object_name, local_path)
@@ -160,7 +163,7 @@ class ObjectDetectionBot(Bot):
         )
 
     def handle_message(self, msg):
-
+        
         logger.info(f'Incoming message: {msg}')
         if self.is_current_msg_photo(msg):
             with open('loading.gif', 'rb') as gif:
