@@ -91,7 +91,7 @@ class ObjectDetectionBot(Bot):
     def get_formatted_string(self,objects_dict):
         formatted_string = f'Objects Detected:\n'
         for key,value in objects_dict.items():
-            emojie = emoji.emojize(f'{emojies[key]}') if key in emojies.keys() else ""
+            emojie = emoji.emojize(f'{emojies[key]}') if key in emojies.keys() else emoji.emojize(':full_moon_face:')
             formatted_string += f'{key}{emojie}: {value}\n'
         return formatted_string
 
