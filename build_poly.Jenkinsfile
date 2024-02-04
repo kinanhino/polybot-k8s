@@ -43,6 +43,7 @@ pipeline {
                             sh 'git checkout argo-releases'
                             sh 'git fetch --all'
                             sh 'git reset --hard origin/argo-releases'
+                            
                             try {
                                 sh 'git merge origin/main'
                             } catch (Exception e) {
