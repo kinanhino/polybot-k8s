@@ -82,7 +82,6 @@ class Bot:
 class ObjectDetectionBot(Bot):
 
     def handle_dynamo_message(self, dynamo_message):
-        
         class_names = [label['M']['class']['S'] for label in dynamo_message['labels']]
         class_counts = Counter(class_names)
         json_string = json.dumps(class_counts)
