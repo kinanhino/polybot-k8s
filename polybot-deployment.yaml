@@ -21,9 +21,9 @@ spec:
           resources:
             requests:
               memory: "100Mi"
-              cpu: "50m"
+              cpu: "100m"
             limits:
-              memory: "150Mi"
+              memory: "100Mi"
               cpu: "100m"
           env:
             - name: BUCKET_NAME
@@ -39,7 +39,7 @@ spec:
                 secretKeyRef:
                   name: team3-secrets
                   key: DYNAMO_TBL
-                  
+
           # Add liveness and readiness probes
           livenessProbe:
             httpGet:
