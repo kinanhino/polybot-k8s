@@ -27,15 +27,30 @@ spec:
               cpu: "100m"
           env:
             - name: BUCKET_NAME
-              value: kin-docker-bucket
+              valueFrom:
+                secretKeyRef:
+                  name: team3-secrets
+                  key: BUCKET_NAME
             - name: TELEGRAM_APP_URL
-              value: https://bot.atech-bot.click/team3polybot
+              valueFrom:
+                secretKeyRef:
+                  name: team3-secrets
+                  key: TELEGRAM_APP_URL
             - name: REGION
-              value: us-east-1
+              valueFrom:
+                secretKeyRef:
+                  name: team3-secrets
+                  key: REGION
             - name: QUEUE_URL
-              value: https://sqs.us-east-1.amazonaws.com/933060838752/team3nsQueue
+              valueFrom:
+                secretKeyRef:
+                  name: team3-secrets
+                  key: QUEUE_URL
             - name: DYNAMO_TBL
-              value: aws-dynamo-kinan
+              valueFrom:
+                secretKeyRef:
+                  name: team3-secrets
+                  key: DYNAMO_TBL
           # Add liveness and readiness probes
           livenessProbe:
             httpGet:
