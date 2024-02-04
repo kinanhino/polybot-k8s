@@ -4,7 +4,7 @@ metadata:
   name: team3polybot
   namespace: team3ns
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: team3polybot
@@ -15,30 +15,19 @@ spec:
     spec:
       containers:
         - name: team3polybot
-          image: 933060838752.dkr.ecr.eu-central-1.amazonaws.com/team3-polybot-ecr:12_20240130_223333
+          image: 933060838752.dkr.ecr.eu-central-1.amazonaws.com/team3-polybot-ecr:28_20240204_200422
           ports:
             - containerPort: 8443
           resources:
             requests:
-              memory: "100Mi"
-              cpu: "100m"
+              memory: "150Mi"
+              cpu: "150m"
             limits:
-              memory: "100Mi"
-              cpu: "100m"
-          env:
-            - name: BUCKET_NAME
-              value: kin-docker-bucket
-            - name: TELEGRAM_APP_URL
-              value: https://bot.atech-bot.click/team3polybot
-            - name: REGION
-              value: us-east-1
-            - name: QUEUE_URL
-              value: https://sqs.us-east-1.amazonaws.com/933060838752/team3nsQueue
-            - name: DYNAMO_TBL
-              valueFrom:
-                secretKeyRef:
-                  name: team3-secrets
-                  key: DYNAMO_TBL
+              memory: "150Mi"
+              cpu: "150m"
+          envFrom:
+          - secretRef:
+              name: team3-poly-secrets
 
           # Add liveness and readiness probes
           livenessProbe:
