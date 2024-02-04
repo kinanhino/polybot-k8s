@@ -7,6 +7,8 @@ from telebot.types import InputFile
 from botocore.exceptions import ClientError
 from collections import Counter
 import json
+import emoji
+from emojies import emojies
 
 class Bot:
 
@@ -80,18 +82,23 @@ class Bot:
 class ObjectDetectionBot(Bot):
 
     def handle_dynamo_message(self, dynamo_message):
+        
         class_names = [label['M']['class']['S'] for label in dynamo_message['labels']]
-        formatted_string = f'Objects Detected:\n'
         class_counts = Counter(class_names)
         json_string = json.dumps(class_counts)
         counts_dict = json.loads(json_string)
-        for key,value in counts_dict.items():
-            formatted_string += f'{key}: {value}\n'
+        return self.get_formatted_string(counts_dict)
+
+    def get_formatted_string(self,objects_dict):
+        formatted_string = f'Objects Detected:\n'
+        for key,value in objects_dict.items():
+            emojie = emoji.emojize(f'{emojies[key]}') if key in emojies.keys() else ""
+            formatted_string += f'{key}{emojie}: {value}\n'
         return formatted_string
 
     def get_item_by_prediction_id(self, prediction_id):
         dynamodb_client = self.session.client('dynamodb')
-        dynamo_tbl = 'aws-dynamo-kinan'
+        dynamo_tbl = os.getenv('DYNAMO_TBL')
         try:
             response = dynamodb_client.get_item(
                 TableName=dynamo_tbl,

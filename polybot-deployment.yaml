@@ -34,6 +34,8 @@ spec:
               value: us-east-1
             - name: QUEUE_URL
               value: https://sqs.us-east-1.amazonaws.com/933060838752/team3nsQueue
+            - name: DYNAMO_TBL
+              value: aws-dynamo-kinan
           # Add liveness and readiness probes
           livenessProbe:
             httpGet:

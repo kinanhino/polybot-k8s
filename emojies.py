@@ -1,0 +1,17 @@
+emojies = { "person":":person_in_tuxedo:",
+            "bowl": ":bowl_with_spoon:",
+            "bottle":":bottle_with_popping_cork:",
+            "potted plant":":potted_plant:",
+            "sink":":potable_water:",
+            "book":":open_book:",
+            "chair":":chair:",
+            "cup":":cup_with_straw:",
+            "vase":":vase:",
+            "dining table":":plate_with_cutlery:",
+            "couch":":couch_and_lamp:",
+            "umbrella":":closed_umbrella:",
+            "car":":racing_car:",
+            "laptop":":laptop:",
+            "bird":":bird:",
+            "teddy bear":":teddy_bear:"
+            }
