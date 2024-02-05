@@ -51,6 +51,7 @@ pipeline {
                                 sh 'git merge --abort'
                                 error "Merging from main to argo-releases failed. Please resolve conflicts manually."
                             }
+                            
                             sh "sed -i 's|image: .*|image: ${ECR_REGISTRY}/team3-polybot-ecr:${IMAGE_TAG}|' polybot-deployment.yaml"
                             sh 'git config user.email "kinanhino24@gmail.com"'
                             sh 'git config user.name "kinanhino"'
