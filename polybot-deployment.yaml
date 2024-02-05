@@ -15,20 +15,19 @@ spec:
     spec:
       containers:
         - name: team3polybot
-          image: 933060838752.dkr.ecr.eu-central-1.amazonaws.com/team3-polybot-ecr:28_20240204_200422
+          image: 933060838752.dkr.ecr.eu-central-1.amazonaws.com/team3-polybot-ecr:12_20240130_223333
           ports:
             - containerPort: 8443
           resources:
             requests:
-              memory: "150Mi"
-              cpu: "150m"
+              memory: "100Mi"
+              cpu: "50m"
             limits:
               memory: "150Mi"
-              cpu: "150m"
+              cpu: "100m"
           envFrom:
           - secretRef:
               name: team3-poly-secrets
-
           # Add liveness and readiness probes
           livenessProbe:
             httpGet:
