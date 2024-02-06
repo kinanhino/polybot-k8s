@@ -21,6 +21,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Build and Push') {
             steps {
                 script {
