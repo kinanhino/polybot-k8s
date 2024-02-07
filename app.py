@@ -62,6 +62,19 @@ def webhook():
     bot.handle_message(req['message'])
     return 'Ok'
 
+@app.route(f'/noresults/', methods=['GET'])
+def noresults():
+    prediction_id = request.args.get('predictionId')
+
+    # use the prediction_id to retrieve results from DynamoDB and send to the end-user
+    prediction_summary = bot.get_item_by_prediction_id(prediction_id)
+    chat_id = prediction_summary['chat_id']
+    gif_message_id = prediction_summary['gif_message_id']
+    bot.delete_message(chat_id, gif_message_id)
+    logger.info(f'chat id: {chat_id}')
+    text_results = "No Objects Where Detected, Send a more detailed photo!"
+    bot.send_text(chat_id, text_results)
+    return 'Ok'
 
 @app.route(f'/results/', methods=['GET'])
 def results():
