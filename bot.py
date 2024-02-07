@@ -169,9 +169,9 @@ class ObjectDetectionBot(Bot):
         
         logger.info(f'Incoming message: {msg}')
         if self.is_current_msg_photo(msg):
-            with open('loading.gif', 'rb') as gif:
+            with open('loading.mp4', 'rb') as gif:
                 # send message to the Telegram end-user
-                loading_msg = self.send_animation(chat_id=msg['chat']['id'], gif=gif)
+                loading_msg = self.send_video(chat_id=msg['chat']['id'], video=gif)
         
             photo_path = self.download_user_photo(msg)
             bucket_name = os.environ['BUCKET_NAME']
@@ -183,4 +183,4 @@ class ObjectDetectionBot(Bot):
         elif "text" in msg:
             self.send_text(msg['chat']['id'], 'Hint: Send Photos to detect objects')
         else:
-            self.send_text(msg['chat']['id'], 'Unsupported message type.')
+            self.send_text(msg['chat']['id'], 'Unsupported message type. Please send Photos')
