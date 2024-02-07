@@ -72,7 +72,7 @@ def noresults():
     gif_message_id = prediction_summary['gif_message_id']
     bot.delete_message(chat_id, gif_message_id)
     logger.info(f'chat id: {chat_id}')
-    text_results = "No Objects Where Detected, Send a more detailed photo!"
+    text_results = "No Objects Detected.\nTry sending detailed photo!"
     bot.send_text(chat_id, text_results)
     return 'Ok'
 
