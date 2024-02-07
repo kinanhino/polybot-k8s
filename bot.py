@@ -35,6 +35,9 @@ class Bot:
     def send_animation(self, chat_id, gif):
         return self.telegram_bot_client.send_animation(chat_id=chat_id, animation=gif)
 
+    def send_video(self, chat_id, video):
+        return self.telegram_bot_client.send_video(chat_id=chat_id, video=video)
+    
     def delete_message(self, chat_id, msg_id):
         self.telegram_bot_client.delete_message(chat_id=chat_id, message_id=msg_id)
 
@@ -166,9 +169,12 @@ class ObjectDetectionBot(Bot):
         
         logger.info(f'Incoming message: {msg}')
         if self.is_current_msg_photo(msg):
-            with open('loading.gif', 'rb') as gif:
-                # send message to the Telegram end-user
-                loading_msg = self.send_animation(chat_id=msg['chat']['id'], gif=gif)
+            with open('loading.mp4', 'rb') as video:
+        # send message to the Telegram end-user
+                loading_msg = self.send_video(chat_id=msg['chat']['id'], video=video)
+            # with open('loading.gif', 'rb') as gif:
+                # # send message to the Telegram end-user
+                # loading_msg = self.send_animation(chat_id=msg['chat']['id'], gif=gif)
         
             photo_path = self.download_user_photo(msg)
             bucket_name = os.environ['BUCKET_NAME']
