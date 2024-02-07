@@ -181,6 +181,6 @@ class ObjectDetectionBot(Bot):
             self.send_message_to_sqs(f"{photo_path},{msg['chat']['id']},{loading_msg.message_id}")
 
         elif "text" in msg:
-            self.send_text(msg['chat']['id'], 'Hint: Send Photos to detect objects')
+            self.send_text(msg['chat']['id'], 'Hint: Im at LinkedIn and Its fun!!!')
         else:
             self.send_text(msg['chat']['id'], 'Unsupported message type. Please send Photos')
