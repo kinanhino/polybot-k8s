@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: team3polybot
-          image: 933060838752.dkr.ecr.eu-central-1.amazonaws.com/team3-polybot-ecr:42_20240207_121255
+          image: 933060838752.dkr.ecr.eu-central-1.amazonaws.com/team3-polybot-ecr:43_20240207_163642
           ports:
             - containerPort: 8443
           resources:
