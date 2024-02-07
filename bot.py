@@ -169,10 +169,7 @@ class ObjectDetectionBot(Bot):
             with open('loading.gif', 'rb') as gif:
                 # send message to the Telegram end-user
                 loading_msg = self.send_animation(chat_id=msg['chat']['id'], gif=gif)
-            
-            with open('loadod.gif', 'rb') as gif:
-                # send message to the Telegram end-user
-                loading_msg = self.send_animation(chat_id=msg['chat']['id'], gif=gif)
+        
             photo_path = self.download_user_photo(msg)
             bucket_name = os.environ['BUCKET_NAME']
             # upload the photo to S3
